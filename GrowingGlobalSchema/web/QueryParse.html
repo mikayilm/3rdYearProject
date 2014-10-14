@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Matcher</title>
+        <script src="./jquery.js"></script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <!--<button onclick="myFunction()">Star</button>-->
+        <p id="demo"></p>
+        <script>                       
+            //function myFunction()
+            //{
+                //var str = "SELECT A FROM B";
+                
+                var str = $("#inpt").val();                
+                $("#demo").html(str);
+//                document.getElementById("demo").innerHTML = str;
+                
+                var res = str.match("SELECT(.*)FROM");
+                        //str.match("SELECT(.*)FROM");
+                $("#demo").html(res);        
+//                document.getElementById("demo").innerHTML = res;
+                
+            //}
+        </script>
+    </body>
+</html>
