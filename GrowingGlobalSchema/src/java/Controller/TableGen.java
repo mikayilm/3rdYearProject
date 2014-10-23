@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Controller;
 
 import java.sql.Connection;
@@ -18,7 +13,7 @@ public class TableGen {
 
     private Connection conn = null;
     private String table_name;
-    private String column_name;
+    private String[] column_name;
     private String createString;
 
     public TableGen() {
@@ -35,14 +30,29 @@ public class TableGen {
     }
 
     public void setColName(List<String> Cname) {
-        column_name = Cname.get(0);
+        String str = "";
+        for (String strL : Cname)
+          str += strL;
+        String[] parts = str.split(",");
+        column_name = parts;
     }
 
     public String createStringSelect()
     {
+        String columnNames = "";
+        if (column_name.length > 1)
+        {
+            for (String column_name1 : column_name) {
+                columnNames += column_name1 + " varchar(100), ";
+            }
+            System.out.println("column names " + columnNames);
+        }
+        else
+            columnNames = column_name[0] + " varchar(100), ";
+        
         return createString = "create table " + table_name
                     + "(id int, "
-                    + column_name + " varchar(100), "
+                    + columnNames
                     + "primary key(id)) " ;
     }
     
@@ -60,6 +70,8 @@ public class TableGen {
         }
 
     }
+    
+    
 
     /*   public static void main(String[] aa) {
      try {
@@ -78,4 +90,12 @@ public class TableGen {
      } finally {
      }
      }*/
+
+    public String[] getColumn_name() {
+        return column_name;
+    }
+
+    public void setColumn_name(String[] column_name) {
+        this.column_name = column_name;
+    }
 }

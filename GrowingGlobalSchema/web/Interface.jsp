@@ -10,14 +10,31 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Interface</title>
     </head>
     <body>
 
         <jsp:useBean id="query_proc" class="Controller.QueryProc" scope="session" />
 
-        <c:forEach items="${query_proc.Input(param.query)}" var="item" >
+        <c:forEach items="${query_proc.Input(param.query)}" var="item" >           
             ${item} <br/>
         </c:forEach>
+
+        <c:if test="${type eq false}" var="type" scope="session">
+            <%-- call TableDisp.jsp --%>
+        </c:if>            
+            
+        <c:forEach items="${query_proc.procesSelect()}" var="item" >           
+            ${item} <br/>
+        </c:forEach>
+            
+        <c:forEach items="${query_proc.procesFrom()}" var="item" >           
+            ${item} <br/>
+        </c:forEach>    
+            
+        <c:set var="testing" value="blah" scope="session" />
+        <c:out value="${testing}"/>
+                
+
     </body>
 </html>

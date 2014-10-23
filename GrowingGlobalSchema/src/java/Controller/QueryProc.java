@@ -4,6 +4,8 @@
  */
 package Controller;
 
+import Model.SQL;
+import Model.TableProperty;
 import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -17,25 +19,33 @@ public class QueryProc implements Serializable {
     // ^(?=.*\\bSELECT\\b)(?=.*\\bFROM\\b).*$ - might need later
     private  final String REGEX1 = "SELECT(.*)FROM";
     private  final String REGEX2 = "FROM(.*)";
+    private int ColumnCount;
+    private String[] ColumnName;
+    private List TableName;
+    private String inputVal;
     //private  final String INPUT  = "SELECT A FROM B";
 
     
     
-    public void Input(String input)
+   public void Input()
     {
         TableGen tb = new TableGen();
         
-        tb.setTableName(procesSelect(input));
-        tb.setColName(procesFrom(input));   
+        tb.setColName(procesSelect());
+       
+        ColumnName = tb.getColumn_name();
+        TableName = procesFrom();
+        tb.setTableName(TableName);   
+//        tb.setTableName(procesFrom());   
         tb.createTable();
     }
     /*
         this method processes the part of the input between the Strings SELECT and FROM
     */
-    private  List procesSelect(String input)
+    public  List procesSelect()
     {
         Pattern p = Pattern.compile(REGEX1);
-        Matcher m = p.matcher(input); // get a matcher object
+        Matcher m = p.matcher(inputVal); // get a matcher object
 
         List<String> matchS = new ArrayList<>();
 
@@ -49,6 +59,7 @@ public class QueryProc implements Serializable {
             System.out.println("S: "+a);
         }
         
+        ColumnCount = matchS.size();
         return matchS;
 
     }
@@ -56,10 +67,10 @@ public class QueryProc implements Serializable {
     /*
         this method processes the part of the input that starts after the Strind FROM
     */
-    private  List procesFrom(String input)
+    public  List procesFrom()
     {
         Pattern p = Pattern.compile(REGEX2);
-        Matcher m = p.matcher(input); // get a matcher object
+        Matcher m = p.matcher(inputVal); // get a matcher object
 
         List<String> matchF = new ArrayList<>();
 
@@ -72,10 +83,27 @@ public class QueryProc implements Serializable {
         for(String a : matchF){
             System.out.println("F: "+a);
         }
-        
+        ////
+        TableName = matchF;
+        ////
         return matchF;
 
     }
+    
+    public List<TableProperty> TBList(String Table_Name){
+        SQL query = new SQL();
+        return query.getTableProperty(Table_Name);
+        
+    }
+    
+    public String getURL(String inputValue){
+        
+        System.out.println("input value: "+inputValue);
+        inputVal = inputValue;
+        return "./TableDisplay.jsp";
+        
+    }
+    
 
     public static void main(String[] args) {
        
@@ -85,4 +113,38 @@ public class QueryProc implements Serializable {
 
         }*/
     }
+
+    public int getColumnCount() {
+        return ColumnCount;
+    }
+
+    public void setColumnCount(int ColumnCount) {
+        this.ColumnCount = ColumnCount;
+    }
+
+    public List getTableName() {
+        return TableName;
+    }
+
+    public void setTableName(List TableName) {
+        this.TableName = TableName;
+    }
+
+    public String getInputVal() {
+        return inputVal;
+    }
+
+    public void setInputVal(String inputVal) {
+        this.inputVal = inputVal;
+    }
+
+    public String[] getColumnName() {
+        return ColumnName;
+    }
+
+    public void setColumnName(String[] ColumnName) {
+        this.ColumnName = ColumnName;
+    }
+    
+    
 }
