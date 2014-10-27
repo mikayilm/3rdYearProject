@@ -16,14 +16,12 @@ import java.util.regex.*;
 @SessionScoped
 public class QueryProc implements Serializable {
 
-    // ^(?=.*\\bSELECT\\b)(?=.*\\bFROM\\b).*$ - might need later
     private  final String REGEX1 = "SELECT(.*)FROM";
     private  final String REGEX2 = "FROM(.*)";
     private int ColumnCount;
     private String[] ColumnName;
     private List TableName;
     private String inputVal;
-    //private  final String INPUT  = "SELECT A FROM B";
 
     
     
@@ -31,14 +29,13 @@ public class QueryProc implements Serializable {
     {
         TableGen tb = new TableGen();
         
-        tb.setColName(procesSelect());
-       
+        tb.setColName(procesSelect());       
         ColumnName = tb.getColumn_name();
         TableName = procesFrom();
-        tb.setTableName(TableName);   
-//        tb.setTableName(procesFrom());   
-        tb.createTable();
+        tb.setTableName(TableName);    
+        tb.generateSchema();
     }
+   
     /*
         this method processes the part of the input between the Strings SELECT and FROM
     */
@@ -65,7 +62,7 @@ public class QueryProc implements Serializable {
     }
     
     /*
-        this method processes the part of the input that starts after the Strind FROM
+        processes the part of the input that starts after the Strind FROM
     */
     public  List procesFrom()
     {
@@ -103,16 +100,6 @@ public class QueryProc implements Serializable {
         return "./TableDisplay.jsp";
         
     }
-    
-
-    public static void main(String[] args) {
-       
-        /*List a = Input(INPUT);
-        for (int i = 0; i < a.size(); i++) {
-            System.out.println("a: " + i + ")  " + a.get(i));
-
-        }*/
-    }
 
     public int getColumnCount() {
         return ColumnCount;
@@ -147,4 +134,13 @@ public class QueryProc implements Serializable {
     }
     
     
+
+    public static void main(String[] args) {
+       
+        /*List a = Input(INPUT);
+        for (int i = 0; i < a.size(); i++) {
+            System.out.println("a: " + i + ")  " + a.get(i));
+
+        }*/
+    }    
 }

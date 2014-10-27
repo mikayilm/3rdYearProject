@@ -45,8 +45,8 @@
                             <select name="${query_proc.columnName[i]}">
                                 <c:set var="i" value="${i+1}" />
                                 <option value="${TB.TYPE}">${TB.TYPE}</option>
-                                <option value="int">INTEGER</option>
-                                <option value="datetime">DATETIME</option>
+                                <option value="int(11)">integer</option>
+                                <option value="datetime">datetime</option>
                             </select> 
                         </td>
                     </tr>

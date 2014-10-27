@@ -1,8 +1,7 @@
 package Controller;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
+import Model.SQL;
+import Model.TableProperty;
 import java.util.List;
 
 /**
@@ -11,19 +10,8 @@ import java.util.List;
  */
 public class TableGen {
 
-    private Connection conn = null;
     private String table_name;
     private String[] column_name;
-    private String createString;
-
-    public TableGen() {
-        try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sample_db?user=root&password=123456");
-        } catch (Exception ex) {
-            System.out.println("conn exception: " + ex.getMessage());
-        } finally {
-        }
-    }
 
     public void setTableName(List<String> Tname) {
         table_name = Tname.get(0);
@@ -37,41 +25,30 @@ public class TableGen {
         column_name = parts;
     }
 
-    public String createStringSelect()
-    {
-        String columnNames = "";
-        if (column_name.length > 1)
+    /*
+        to check if table exist already to add columns
+        or if not exists to create table
+    */
+    public void generateSchema()
+    {        
+        SQL sql = new SQL();
+        if (sql.isTabeleExists(table_name))
         {
-            for (String column_name1 : column_name) {
-                columnNames += column_name1 + " varchar(100), ";
-            }
-            System.out.println("column names " + columnNames);
+            sql.addCol(column_name, table_name);
         }
         else
-            columnNames = column_name[0] + " varchar(100), ";
-        
-        return createString = "create table " + table_name
-                    + "(id int, "
-                    + columnNames
-                    + "primary key(id)) " ;
-    }
-    
-    public void createTable() {
-        
-        createString = createStringSelect();
-
-        try {
-            Statement st = conn.createStatement();
-
-            int a = st.executeUpdate(createString);
-        } catch (Exception ex) {
-            System.out.println("createTable: "+ex.getMessage());
-          
+        {
+            sql.createTable(column_name, table_name);
         }
-
     }
     
-    
+    public String[] getColumn_name() {
+        return column_name;
+    }
+
+    public void setColumn_name(String[] column_name) {
+        this.column_name = column_name;
+    }
 
     /*   public static void main(String[] aa) {
      try {
@@ -90,12 +67,4 @@ public class TableGen {
      } finally {
      }
      }*/
-
-    public String[] getColumn_name() {
-        return column_name;
-    }
-
-    public void setColumn_name(String[] column_name) {
-        this.column_name = column_name;
-    }
 }

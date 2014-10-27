@@ -30,7 +30,6 @@ public class AlterTable {
         SQL sql = new SQL();
 
         for( Map.Entry<String, String> ee : colType.entrySet() ){
-            System.out.println(ee.getKey() + "   " + ee.getValue());
             sql.AlterTable(tableName, ee.getKey(), ee.getValue());
             
         }

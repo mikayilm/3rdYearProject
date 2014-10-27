@@ -16,7 +16,7 @@
 
         <jsp:useBean id="query_proc" class="Controller.QueryProc" scope="session" />
 
-        <c:forEach items="${query_proc.Input(param.query)}" var="item" >           
+        <c:forEach items="${query_proc.Input()}" var="item" >           
             ${item} <br/>
         </c:forEach>
 
