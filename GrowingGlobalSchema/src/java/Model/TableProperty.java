@@ -48,22 +48,4 @@ public class TableProperty {
     public void setKEY(String KEY) {
         this.KEY = KEY;
     }
-
-    public String getDEFAULT() {
-        return DEFAULT;
-    }
-
-    public void setDEFAULT(String DEFAULT) {
-        this.DEFAULT = DEFAULT;
-    }
-
-    public String getEXTRA() {
-        return EXTRA;
-    }
-
-    public void setEXTRA(String EXTRA) {
-        this.EXTRA = EXTRA;
-    }
-    
-    
 }

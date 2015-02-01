@@ -21,7 +21,7 @@ public class SQL {
     private String createString;
     private String addColString;
     private List<String> ColumnNames;
-    private StringBuilder AddString = new StringBuilder();
+    private StringBuilder AddString = null;
 
     public SQL() {
 
@@ -36,7 +36,7 @@ public class SQL {
     public void logAlter(String logInfo) {
         logger.info("Alter  \\ DDL : " + logInfo);
     }
-    
+
     public void logAddCol(String logInfo) {
         logger.info("AddCol \\ DDL : " + logInfo);
     }
@@ -47,8 +47,11 @@ public class SQL {
 
         try {
 
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sample_db?user=root&password=123456");
+            Class.forName("org.h2.Driver");
+            conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test", "sa", "");
             st = conn.createStatement();
+//            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sample_db?user=root&password=123456");
+//            st = conn.createStatement();
             ConRes = true;
         } catch (Exception ex) {
             System.out.println("connect: " + ex.getMessage());
@@ -76,8 +79,8 @@ public class SQL {
 
         StringBuilder columnNames = new StringBuilder();
         for (String column_name1 : column_name) {
-                columnNames.append(column_name1.trim()).append(" varchar(100),");
-            }
+            columnNames.append(column_name1.trim()).append(" varchar(100),");
+        }
 
         return createString = "create table " + table_name
                 + "(id int, "
@@ -102,6 +105,24 @@ public class SQL {
         }
         return exist;
     }
+    
+    public Boolean createTable(String table_name) {
+
+        Boolean exist = false;
+        createString = "create table " + table_name;
+        logCreate(createString);
+        connect();
+        try {
+            int a = st.executeUpdate(createString);
+            //exist = true;
+        } catch (Exception ex) {
+            System.out.println("createTable: " + ex.getMessage());
+            exist = true;
+        } finally {
+            Disconnect();
+        }
+        return exist;
+    }
 
     public List<TableProperty> getTableProperty(String TableName) {
 
@@ -110,10 +131,11 @@ public class SQL {
         ColumnNames = new ArrayList<String>();
         try {
 
-            ResultSet rs = st.executeQuery("describe " + TableName);
+            ResultSet rs = st.executeQuery("show columns from " + TableName);
             while (rs.next()) {
 
                 if (rs.isFirst()) {
+//                    System.out.println(" first " + rs.getString("name"));
                     continue;
                 }
                 ColumnNames.add(rs.getString("field"));
@@ -130,6 +152,33 @@ public class SQL {
 
         return TBList;
     }
+    
+//    public String checkTableName(String TableName)
+//    {
+//        connect();
+//        String existingTable ;
+//        try {
+//
+//            ResultSet rs = st.executeQuery("show columns from " + TableName);
+//            while (rs.next()) {
+//
+//                if (rs.isFirst()) {
+//                    continue;
+//                }
+//                ColumnNames.add(rs.getString("field"));
+//                TableProperty TB = new TableProperty();
+//                TB.setFIELD(rs.getString("field"));
+//                TB.setTYPE(rs.getString("type"));
+//
+//                TBList.add(TB);
+//            }
+//
+//        } catch (Exception ex) {
+//            System.out.println("getTableProperty: " + ex.getMessage());
+//        }
+//
+//        return existingTable;
+//    }
 
     public void AlterTable(String tableName, String colName, String colType) {
 
@@ -149,45 +198,59 @@ public class SQL {
     }
 
     /**
-     * to create a String SQL query for addCol method 
+     *  to create a String SQL query for addCol method
      */
     public String createAddString(String[] column_name, String table_name) {
 
+        AddString = new StringBuilder();
+        String result;
         for (String aa : column_name) {
 
             if (!ColumnNames.contains(aa.trim())) {
-                AddString.append(" add column ").append(aa).append(" varchar(100),");
+                AddString.append(aa).append(" varchar(100),");
             }
         }
-        AddString.replace(AddString.length() - 1, AddString.length(), ";");
 
-        return "alter table " + table_name + AddString.toString();
+        if (AddString.length() == 0) {
+
+            result = "";
+
+        } else {
+            AddString.replace(AddString.length() - 1, AddString.length(), ");");
+            result = "alter table " + table_name.trim() + " add column (" + AddString.toString();
+        }
+
+        return result;
     }
 
     /*
-     NOTE : might need modification later to add dynamic column type
-     if the table already exists adds columns to the current table
+       NOTE : might need modification later to add dynamic column type
+       if the table already exists adds columns to the current table
      */
     public void addCol(String[] columnName, String tableName) {
-        
+
         addColString = createAddString(columnName, tableName);
         logAddCol(addColString);
         connect();
+        
         try {
-            st.executeUpdate(addColString);
+            if (!addColString.equals("")) {
+                st.executeUpdate(addColString);
+            }
 
         } catch (Exception ex) {
             System.out.println("addCol: " + ex.getMessage());
         } finally {
+            
             Disconnect();
         }
     }
 
     /*
-        to check if table exists
-        the called method returns the list of table properities
-        if it return nothing it meaans that table does not exists in DB
-    */
+     to check if table exists
+     the called method returns the list of table properities
+     if it return nothing it meaans that table does not exists in DB
+     */
     public boolean isTabeleExists(String tableName) {
         return !getTableProperty(tableName).isEmpty();
     }

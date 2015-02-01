@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Growing Database Schemas</title>
+        <meta charset="UTF-8">
+        <link href="./resources/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
+        <link href="./resources/css/GDS.css" rel="stylesheet"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body class="home">
+        <div class="header">
+                <h1>Growing Database Schemas</h1>
+                <ul class="urlParent" >
+                    <li><a href="#"> About</a></li>
+                    <li><a href="./index.html">Start</a></li>
+                    <li><a href="./home.html">Home</a></li>
+                </ul>
+        </div>
+        <div class="section">
+            <h2>What is Growing Database Schemas ?</h2>
+                <p>
+                    Growing Database Schemas is a web application, which takes one SQL query at a time and builds the 
+                    global database schema on which that query can be run. And at each subsequent query updates the schema to make it grow.
+                </p>
+            <h2>Why do we need this application ?</h2>
+                <p>
+                    In data integration, we want to get data to solve some business problem,but no one single database has all the data we need. 
+                    We could create a warehouse, which contains a copy of the important data from each of the databases,
+                    and then write our software to run on top of that. Or we create a "virtual" database 
+                    that looks as though it contains the data from both databases, but which in fact does not exist at all. 
+                    The virtual database needs to have a schema. At the moment, someone with lots of technical expertise
+                    and understanding of the relevant databases normally designs the global schema. 
+                    It can look like the local schemas, or it can be completely different.  
+                    The person building the mediator has to give it mappings that tell it 
+                    how the things in the global schema relate to the things in the local schemas.
+                    And someone has to work out in detail what all these mappings are, too.
+
+                </p>
+                <p><b><font size="3">The problem with this is:</font></b>
+                    who does this difficult and time-consuming job?  
+                    Who knows enough about all the databases involved and what they contain? 
+                    This will be domain experts. But these people don't have the technical skills to create the schema and the mappings.
+                </p>
+            <h2>How does this application solve the problem above ?</h2>
+                <p>
+                    This application is going to try to apply <b>pay-as-you-go</b> techniques to this task: <b>the design of the global schema.</b> 
+                    Instead of asking the domain experts to create the whole global schema up front in one go,
+                </p>               
+        </div>
+        <div class="footer">
+            Copyright © 2014. Mikayil Murad.
+        </div>
+    </body>
+</html>

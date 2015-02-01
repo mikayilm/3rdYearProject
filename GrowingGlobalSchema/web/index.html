@@ -1,19 +1,32 @@
 <!DOCTYPE html>
-<!-- 
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
-        <title>3rd Year Project</title>
+        <title>GDS</title>
         <meta charset="UTF-8">
+        <link href="./resources/css/GDS.css" rel="stylesheet"/>
+                <link href="./resources/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body>
-        <form action="./switch.jsp" method="post">
-            input the query: <input id="inpt" type="text" name="query" />
-            <input type="submit" value="submit" />
-        </form>
+    <body class="home">
+        <div class="header">
+                <h1>Growing Database Schemas</h1>
+                <ul class="urlParent" >
+                    <li><a href="#"> About</a></li>
+                    <li><a href="./index.html">Start</a></li>
+                    <li><a href="./home.html">Home</a></li>
+                </ul>
+        </div>
+        <div class="index_section">
+            <form action="./switch.jsp" method="post">
+<!--                <font size="5">Enter the query: </font>-->
+                <h3>Enter the query</h3>
+                <textarea rows="4" cols="50" id="inpt" name="query"></textarea>
+<!--                <input id="inpt" type="text" name="query" />-->
+                <br><br><input type="submit" value="submit" />
+            </form>
+        </div>
+        <div class="footer">
+            Copyright © 2014. Mikayil Murad.
+        </div>
     </body>
 </html>

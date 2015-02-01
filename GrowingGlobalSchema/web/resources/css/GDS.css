@@ -1,0 +1,111 @@
+/* 
+    Created on : Nov 2, 2014, 12:57:26 PM
+    Author     : Mikayil
+*/
+
+.home{
+    background-color: #f3f4eb;
+}
+.header {
+    background-color:black;
+    color: white;
+    height: 15%;
+    padding-left:10%;
+    padding-top:1%;
+    padding-bottom:1%;
+}
+.section {
+    background-color:#f3f4eb;
+    height: 77%;
+    top: 15%;
+    position: absolute;
+    padding-left:10%;
+    padding-right:10%;
+    /*padding-top: 1%;*/
+    /*padding-bottom: 2%;*/	
+    overflow-y: auto;
+}
+
+.index_section{
+    background-color:#f3f4eb;
+    height: 77%;
+    top: 15%;
+    position: absolute;
+    padding-left:37%;
+/*    padding-right:10%;*/
+    padding-top: 8%;
+/*    padding-bottom: 2%;	*/
+    overflow-y: auto;
+}
+
+.table_section {
+    background-color:#f3f4eb;
+    height: 77%;
+    top: 15%;
+    position: absolute;
+    padding-left:10%;
+/*    padding-right:10%;*/
+    /*padding-top: 1%;*/
+    /*padding-bottom: 2%;*/	
+    overflow-y: auto;
+}
+
+.footer {
+    background-color:black;
+    color:white;
+    /*clear:both;*/
+    text-align:center;
+    padding:1%;
+    width: 100%;
+    height: 8%;
+    position: fixed;
+    bottom: 0;
+}
+
+.header a {
+    text-align:right;
+}
+
+/*home start about*/
+.urlParent{
+/*    border: 1px solid red;*/
+    width: 30%;
+    position: absolute;
+    right: 10%;
+    top: 6%;
+    padding-left: 0;
+}
+
+.urlParent li{
+    display: inline;
+    list-style-type: none;
+    float: right;
+    padding-left: 3%;
+    padding-right:3%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
+
+.urlParent li:hover{
+    background-color: darkgray;    
+}
+
+/* unvisited link */
+.urlParent a:link {
+    color: white;
+}
+
+/* visited link */
+a:visited {
+    color: white;
+}
+
+/* mouse over link */
+.urlParent a:hover {
+    color: black;
+}
+
+/* selected link */
+.urlParent a:active {
+    color: red;
+}

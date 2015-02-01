@@ -1,0 +1,17 @@
+
+/* 
+    Created on : Nov 1, 2014, 4:34:34 PM
+    Author     : Mikayil
+*/
+
+.panel:hover{
+    background-color: lightblue;
+}
+
+.panel{
+    background-color: blue;
+    padding-top: 30px;
+    height: 70px;
+    width: 100px;
+    text-align: center;
+}
