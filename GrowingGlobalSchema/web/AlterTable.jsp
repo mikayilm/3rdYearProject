@@ -18,7 +18,7 @@
                 <h1>Growing Database Schemas</h1>
                 <ul class="urlParent" >
                     <li><a href="#"> About</a></li>
-                    <li><a href="./index.html">Start</a></li>
+                    <li><a href="./index.jsp">Start</a></li>
                     <li><a href="./home.html">Home</a></li>
                 </ul>
         </div>
@@ -28,7 +28,7 @@
 
              <h4>Selected types successfully changed in the schema.</h4>
              <h4>Would you like to enter another query.</h4>
-             <form Action="./index.html" method="Post">
+             <form Action="./index.jsp" method="Post">
                  <input type="Submit" value="Yes" />
              </form>
          </div>

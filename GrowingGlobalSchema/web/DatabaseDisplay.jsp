@@ -1,9 +1,10 @@
 <%-- 
-    Document   : TableDisplay
-    Created on : Oct 17, 2014, 3:53:18 PM
+    Document   : DatabaseDisplay
+    Created on : Feb 28, 2015, 4:26:20 PM
     Author     : Mikayil
 --%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -12,7 +13,7 @@
         <link href="./resources/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
         <link href="./resources/css/GDS.css" rel="stylesheet"/>
         
-        <title>Table</title>
+        <title>Database</title>
     </head>
     <body class="home">    
         <jsp:useBean id="query_proc" class="Controller.QueryProc" scope="session" >
@@ -33,12 +34,10 @@
                 </ul>
         </div>
         <div class="table_section">
-            <h5>You have not provided the type for the variables in the query.</h5>
-            <h5>Please chose one from the Type boxes and then Save.</h5>
 
             ${query_proc.Input()}
 
-            <h1>Table Name: <c:out value="${query_proc.tableName.get(0)}"/> </h1>
+            <h1>Database Name: <c:out value="${param.DBname}"/> </h1>
 
             <form action ="./AlterTable.jsp" method="post" >
                     <table class="table table-striped" style="width:100%" >
