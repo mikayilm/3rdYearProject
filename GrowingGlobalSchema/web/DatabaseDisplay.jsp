@@ -3,7 +3,6 @@
     Created on : Feb 28, 2015, 4:26:20 PM
     Author     : Mikayil
 --%>
-
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -13,17 +12,17 @@
         <link href="./resources/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
         <link href="./resources/css/GDS.css" rel="stylesheet"/>
         
-        <title>Database</title>
+        <title>Table</title>
     </head>
     <body class="home">    
-        <jsp:useBean id="query_proc" class="Controller.QueryProc" scope="session" >
-            <%--<jsp:setProperty name="query_proc" property="inputVal" value="query" />--%>
-        </jsp:useBean>
+        <jsp:useBean id="query_proc" class="Controller.QueryProc" scope="session" ></jsp:useBean>     
         
-        ${query_proc.resetDB(param.DBname, param.selectR)}        
-        ${query_proc.setInputVal(param.query)}
-        ${query_proc.setDBname(param.DBname)}
+        <!--$%{query_proc.resetDB(param.DBname, param.action)}-->        
+        <!--$%{query_proc.setInputVal(param.query)}-->
         
+        <!--$%{query_proc.setDBname(param.DBname)}-->
+        <%--<jsp:useBean id="alter_table" class="Controller.AlterTable" scope="request" ></jsp:useBean>        
+            ${alter_table.alterDDL(query_proc.DBname, query_proc.tableName.get(0), query_proc.columnName, param )}--%>
         
         <div class="header">
                 <h1>Growing Database Schemas</h1>
@@ -33,36 +32,28 @@
                     <li><a href="./home.html">Home</a></li>
                 </ul>
         </div>
-        <div class="table_section">
+        <div class="database_section">
 
-            ${query_proc.Input()}
+            <!--$%{query_proc.Input()}-->
 
-            <h1>Database Name: <c:out value="${param.DBname}"/> </h1>
 
-            <form action ="./AlterTable.jsp" method="post" >
+            <form action ="./index.jsp" method="post" >
+                <c:forEach items="${query_proc.DBnames}" var="db_name" >                    
+                    ${db_name}
+                    
                     <table class="table table-striped" style="width:100%" >
-                    <tr>
-                        <th>Column NAME</th>
-                        <th>Column TYPE</th>
-                    </tr>
-                    <c:set var="i" value="0" />
-                    <c:forEach items="${query_proc.TBList(query_proc.tableName.get(0), param.DBname)}" var="TB" >
-                        <tr>
-                            <td> ${TB.FIELD} </td>
-                            <td> 
-                                <!-- columnName[i] is for association between FIELD and TYPE -->
-                                <select name="${query_proc.columnName[i]}">
-                                    <c:set var="i" value="${i+1}" />
-                                    <option value="${TB.TYPE}">${TB.TYPE}</option>
-                                    <option value="INT(11)">INTEGER</option>
-                                    <option value="datetime">DATETIME</option>
-                                </select> 
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </table>
+                            <tr>
+                                <th>Table Names</th>
+                            </tr>
+                        <c:forEach items="${query_proc.getTableNames(db_name)}" var="table" >
+                            <tr>
+                                <td><a href="./dbToTableDisplay.jsp?DBname=${db_name}&tbl_nm=${table}">${table}</a></td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                </c:forEach>
                 <br/>
-                <input type="submit" value="Save" />
+                <button>Save and Continue</button>
             </form>
         </div>
         <div class="footer">

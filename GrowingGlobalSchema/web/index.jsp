@@ -23,7 +23,7 @@
         <jsp:useBean id="query_proc" class="Controller.QueryProc" scope="session" ></jsp:useBean>  
 
         <div class="header">
-            <h1>Growing Database Schemas</h1>
+            <h3>Growing Database Schemas</h3>
             <ul class="urlParent" >
                 <li><a href="#"> About</a></li>
                 <li><a href="./index.jsp">Start</a></li>
@@ -47,11 +47,7 @@
                 if (document.getElementById("inpt").value === "") {
                     alert("PLEASE ENTER A QUERY");
                     return false;
-                }
-                if (document.getElementById("slctRE").value === "chose action"){
-                    alert("PLEASE CHOSE AN ACTION");
-                    return false;
-                }
+                }                                
             }
 
 
@@ -62,26 +58,32 @@
                         alert("WARNING!\n\
                         \n\nchosing RESET action \nwill delete your previous schema in selected database \n\
                         \nand generate schemas of only currently added queries ");
-                });               
-            });
-
-            $("document").ready(function(){
+                });
+                
                 $("#slct").change(function(){
                     $("#DBname").val($(this).val());
-                });               
+                });  
+                
+                $("button[name='actBTN']").click(function(){
+                    $("#action").val($(this).attr("id"));
+                    $("#textForm").submit();
+                });
+                
             });
+            
             
         </script>
 
         <div class="index_section">
 
             <form method="POST" action="./upload"  enctype="multipart/form-data" id="formSer" >                
-                <h3>Chose a file:</h3><input type="file" name="file" id="file" /> <br>
+                <h4>Chose a file:</h4><input type="file" name="file" id="file" /> <br>
                 <input type="submit" value="Upload" name="upload" id="upload" />
             </form>            
 
-            <form action="./TableDisplay.jsp" method="POST" id="myForm" onsubmit="return validateForm();">                
-                <h3>Enter or chose a database name:</h3><input type="text" name="DBname" id="DBname" /> 
+            <form action="./Relations.jsp" method="POST" id="textForm" onsubmit="return validateForm();">                
+            <!--<form action="./Controll" method="POST" id="poxfirm" onsubmit="return validateForm();">-->                
+                <h4>Enter or chose a database name:</h4><input type="text" name="DBname" id="DBname" /> 
                 
                 <select id="slct">
                     <c:forEach items="${query_proc.getDBnames()}" var="dbn" >
@@ -89,14 +91,12 @@
                     </c:forEach>
                 </select>
 
-                <h3>Enter or edit queries:</h3><textarea rows="4" cols="50" id="inpt" name="query">${requestScope.test}</textarea>
-                <select id="slctRE" name="selectR">
-                    <option>chose action</option>
-                    <option>Reset</option>
-                    <option>Enlarge</option>
-                </select>
-                <input type="submit" name="enlarge" value="done"  /> 
-<!--                <input type="submit" name="reset" value="reset and generate schema" id="reset"/>-->
+                <h4>Enter or edit queries:</h4><textarea rows="4" cols="52" id="inpt" name="query">${requestScope.test}</textarea>
+                <!--<input type="hidden" name="action" value="tabledisplay" />-->
+                <input type="hidden" id="action" name="dbAction" value="" />
+                <button name="actBTN" id="enlarge">Enlarge or Create schema</button>
+                <button name="actBTN" id="reset">Reset and Create schema</button>
+                
             </form>
 
         </div>

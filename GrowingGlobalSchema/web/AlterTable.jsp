@@ -3,7 +3,7 @@
     Created on : Oct 19, 2014, 5:05:38 PM
     Author     : Mikayil
 --%>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -12,8 +12,10 @@
         <link href="./resources/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
         <link href="./resources/css/GDS.css" rel="stylesheet"/>
         <title>Table success</title>
-    </head>
+    </head>    
     <body class="home">
+        <jsp:useBean id="query_proc" class="Controller.QueryProc" scope="session" ></jsp:useBean>
+        
         <div class="header">
                 <h1>Growing Database Schemas</h1>
                 <ul class="urlParent" >
@@ -23,12 +25,18 @@
                 </ul>
         </div>
         <div class="section">
-            <jsp:useBean id="alter_table" class="Controller.AlterTable" scope="request" ></jsp:useBean>        
-            ${alter_table.alterDDL( query_proc.tableName.get(0), query_proc.columnName, param )}  
+                          
 
              <h4>Selected types successfully changed in the schema.</h4>
              <h4>Would you like to enter another query.</h4>
-             <form Action="./index.jsp" method="Post">
+             <form Action="./DatabaseDisplay.jsp" method="Post">
+                 
+                <!--//TESTING--> 
+                <c:forEach items="${query_proc.getRelation(param)}" var="map" >
+                     from: ${map.key} to: ${map.value} <br>
+                     
+                </c:forEach>
+                 
                  <input type="Submit" value="Yes" />
              </form>
          </div>

@@ -26,11 +26,10 @@ public class SQL {
     private StringBuilder AddString = null;
     private String DBname;
 
-    private String[] column_names_proces ;
+    private String[] column_names_proces;
     private String table_name_process;
-    //private ArrayList<String> DBnames;
     private List<String> tableNames;
-    
+
     public SQL() {
 
     }
@@ -44,7 +43,7 @@ public class SQL {
     public void logAlter(String logInfo) {
         logger.info("Alter  \\ DDL : " + logInfo);
     }
-    
+
     public void logDrop(String logInfo) {
         logger.info("Drop  \\ DDL : " + logInfo);
     }
@@ -53,48 +52,36 @@ public class SQL {
         logger.info("AddCol \\ DDL : " + logInfo);
     }
 
-//    public ArrayList<String> getDBnames() {
-//        return DBnames;
-//    }
-
     public void setDBname(String DBname) {
         this.DBname = DBname;
     }
-    
+
     public String getDBname() {
         return DBname;
     }
-    
+
     public boolean connect() {
 
         boolean ConRes = false;
 
         try {
-            
             Class.forName("org.h2.Driver");
-            System.out.println("DBname from connect: " + DBname);
-            
             String url = "jdbc:h2:tcp://localhost/~/" + DBname;
-            System.out.println("database " + url);
-            
+
             conn = DriverManager.getConnection(url, "sa", "");
             st = conn.createStatement();
-//            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sample_db?user=root&password=123456");
-//            st = conn.createStatement();
+
             ConRes = true;
         } catch (Exception ex) {
             System.out.println("connect: " + ex.getMessage());
         }
-
         return ConRes;
-
     }
 
     public boolean Disconnect() {
 
         boolean DisConnRes = false;
         try {
-
             st.close();
             conn.close();
             DisConnRes = true;
@@ -104,59 +91,78 @@ public class SQL {
         return DisConnRes;
     }
 
-    
-    public void generateSchema(String[] colName, String tabName, String dbName)
-    {   
-        System.out.println("ddddd " + dbName);
+    public void generateSchema(String[] colName, String tabName, String dbName) {
+
         table_name_process = tabName;
         column_names_proces = colName;
-        setDBname(dbName);     
+        setDBname(dbName);
 
-        System.out.println("gen sch");
         SQL sql = new SQL();
-        if (sql.isTabeleExists(table_name_process, dbName))
-        {
-            if (!column_names_proces [0].equals("ALL"))
-                sql.addCol(column_names_proces , table_name_process, dbName);
-        }
-        else
-        {
-            System.out.println("gen sch else");
-            if (column_names_proces [0].equals("ALL"))
-            {
-                System.out.println("gen sch all");
-                sql.createTable(table_name_process, dbName);
+        if (sql.isTabeleExists(table_name_process, dbName)) {
+            if (!column_names_proces[0].equals("ALL")) {
+                sql.addCol(column_names_proces, table_name_process, dbName);
             }
-            else
-            {
-                System.out.println("generate tab");
-                sql.createTable(column_names_proces , table_name_process, dbName);
+        } else {
+            if (column_names_proces[0].equals("ALL")) {
+                sql.createTable(table_name_process, dbName);
+            } else {
+                sql.createTable(column_names_proces, table_name_process, dbName);
             }
         }
     }
-    
-    public String createStringSelect(String[] column_name, String table_name) {
 
-        StringBuilder columnNames = new StringBuilder();
-        for (String column_name1 : column_name) {
-            columnNames.append(column_name1.trim()).append(" varchar(100),");
+    //  ADD columns to EXISTING table        
+    //  note : might need modification later to add dynamic column type        
+    public void addCol(String[] columnName, String tableName, String dbName) {
+
+        setDBname(dbName);
+        // Creating Add String
+        AddString = new StringBuilder();
+        for (String aa : columnName) {
+            if (!ColumnNames.contains(aa.trim())) {
+                AddString.append(aa.trim()).append(" varchar(100),");
+            }
         }
-
-        return createString = "create table " + table_name
-                + "(id int, "
-                + columnNames
-                + "primary key(id)) ";
+        if (AddString.length() == 0) {
+            addColString = "";
+        } else {
+            AddString.replace(AddString.length() - 1, AddString.length(), ");");
+            addColString = "alter table " + tableName.trim() + " add column (" + AddString.toString();
+        }
+        // END Creating Add String       
+        logAddCol(addColString);
+        connect();
+        try {
+            if (!addColString.equals("")) {
+                st.executeUpdate(addColString);
+            }
+        } catch (Exception ex) {
+            System.out.println("addCol: " + ex.getMessage());
+        } finally {
+            Disconnect();
+        }
     }
 
     public Boolean createTable(String[] column_name, String table_name, String dbName) {
 
         Boolean exist = false;
-        createString = createStringSelect(column_name, table_name);
+        // Create String
+        StringBuilder columnNames = new StringBuilder();
+        for (String column_name1 : column_name) {
+            columnNames.append(column_name1.trim()).append(" varchar(100),");
+        }
+
+        createString = "create table " + table_name
+                + "(" + table_name + "_id int, "
+                + columnNames
+                + "primary key(" + table_name + "_id)) ";
+        // END Create String
+
         logCreate(createString);
         setDBname(dbName);
         connect();
         try {
-            int a = st.executeUpdate(createString);
+            st.executeUpdate(createString);
         } catch (Exception ex) {
             System.out.println("createTable: " + ex.getMessage());
             exist = true;
@@ -165,7 +171,7 @@ public class SQL {
         }
         return exist;
     }
-    
+
     public Boolean createTable(String table_name, String dbName) {
 
         Boolean exist = false;
@@ -174,7 +180,7 @@ public class SQL {
         setDBname(dbName);
         connect();
         try {
-            int a = st.executeUpdate(createString);
+            st.executeUpdate(createString);
         } catch (Exception ex) {
             System.out.println("createTable: " + ex.getMessage());
             exist = true;
@@ -184,54 +190,10 @@ public class SQL {
         return exist;
     }
 
-    public List<TableProperty> getTableProperty(String TableName, String dbName) {
-
-        setDBname(dbName);
-        connect();
-        List<TableProperty> TBList = new ArrayList<TableProperty>();
-        ColumnNames = new ArrayList<String>();
-        try {
-
-            ResultSet rs = st.executeQuery("show columns from " + TableName);
-            while (rs.next()) {
-                if (rs.isFirst())
-                    continue;
-
-                ColumnNames.add(rs.getString("field"));
-                TableProperty TB = new TableProperty();
-                TB.setFIELD(rs.getString("field"));
-                TB.setTYPE(rs.getString("type"));
-
-                TBList.add(TB);
-            }
-
-        } catch (Exception ex) {
-            System.out.println("getTableProperty: " + ex.getMessage());
-        }
-
-        return TBList;
-    }
-    
-    public List<String> getTableNames (String dbName)
-    {
-        setDBname(dbName);
-        connect();
-        tableNames = new ArrayList<String>();
-
-        try {
-            ResultSet rs = st.executeQuery("show tables");
-            while (rs.next())
-                tableNames.add(rs.getString("TABLE_NAME"));                                             
-        } catch (Exception ex) {
-            System.out.println("getTableProperty: " + ex.getMessage());
-        }
-        return tableNames;
-    }
-
     public void AlterTable(String tableName, String colName, String colType, String dbName) {
-        
+
         setDBname(dbName);
-        alterString = "alter table " + getDBname() + "." + tableName + " modify " + colName.trim() + " " + colType;
+        alterString = "alter table " + tableName + " modify " + colName.trim() + " " + colType;
         logAlter(alterString);
         connect();
 
@@ -244,72 +206,91 @@ public class SQL {
         }
     }
 
-    /**
-     *  to create a String SQL query for addCol method
-     */
-    public String createAddString(String[] column_name, String table_name, String dbName) {
-
-        setDBname(dbName);
-        AddString = new StringBuilder();
-        String result;
-        for (String aa : column_name) {
-
-            if (!ColumnNames.contains(aa.trim())) {
-                AddString.append(aa.trim()).append(" varchar(100),");
-            }
-        }
-
-        if (AddString.length() == 0) {
-
-            result = "";
-
-        } else {
-            AddString.replace(AddString.length() - 1, AddString.length(), ");");
-            result = "alter table " + getDBname() + "." + table_name.trim() + " add column (" + AddString.toString();
-        }
-
-        return result;
-    }
-
-    /*
-       NOTE : might need modification later to add dynamic column type
-       if the table already exists adds columns to the current table
-     */
-    public void addCol(String[] columnName, String tableName, String dbName) {
-
-        addColString = createAddString(columnName, tableName, dbName);
-        logAddCol(addColString);
-        setDBname(dbName);
-        connect();
-        
-        try {
-            if (!addColString.equals("")) {
-                st.executeUpdate(addColString);
-            }
-
-        } catch (Exception ex) {
-            System.out.println("addCol: " + ex.getMessage());
-        } finally {
-            
-            Disconnect();
-        }
-    }
-
-    /*
-     to check if table exists
-     the called method returns the list of table properities
-     if it return nothing it meaans that table does not exists in DB
+    /*         
+     getTableProperty() returns the list of table properities
+     if it return null it meaans table does not exists
      */
     public boolean isTabeleExists(String tableName, String dbName) {
         return !getTableProperty(tableName, dbName).isEmpty();
     }
-    
-    public void resetDB(String dbname)
-    {
-        getTableNames(dbname);        
-        setDBname(dbname);        
-        
-        for (String tb : tableNames){        
+
+    public List<TableProperty> getTableProperty(String TableName, String dbName) {
+
+        setDBname(dbName);
+        connect();
+        List<TableProperty> TBList = new ArrayList<TableProperty>();
+        ColumnNames = new ArrayList<String>();
+        try {
+
+            ResultSet rs = st.executeQuery("show columns from " + TableName);
+            while (rs.next()) {
+
+                ColumnNames.add(rs.getString("field"));
+                TableProperty TB = new TableProperty();
+                TB.setFIELD(rs.getString("field"));
+                TB.setTYPE(rs.getString("type"));
+                TBList.add(TB);
+            }
+
+        } catch (Exception ex) {
+            System.out.println("getTableProperty: " + ex.getMessage());
+        }
+
+        return TBList;
+    }
+
+    public List<TableProperty> sendSelectStament(String[] colNames, String tbName, String dbName) {
+
+        List<String> columns = new ArrayList<String>();
+        for (String col : colNames) {
+            columns.add(col.trim());
+        }
+
+        setDBname(dbName);
+        connect();
+
+        List<TableProperty> TBList = new ArrayList<TableProperty>();
+        try {
+            ResultSet rs = st.executeQuery("show columns from " + tbName);
+            int i = 0;
+            while (rs.next()) {
+                if (columns.contains(rs.getString("field").trim())) {
+                    TableProperty TB = new TableProperty();
+                    TB.setFIELD(rs.getString("field"));
+                    TB.setTYPE(rs.getString("type"));
+                    TBList.add(TB);
+                }
+            }
+        } catch (Exception ex) {
+            System.out.println("DropTables: " + ex.getMessage());
+        } finally {
+            Disconnect();
+        }
+
+        return TBList;
+    }
+
+    public List<String> getTableNames(String dbName) {
+        setDBname(dbName);
+        connect();
+        tableNames = new ArrayList<String>();
+
+        try {
+            ResultSet rs = st.executeQuery("show tables");
+            while (rs.next()) {
+                tableNames.add(rs.getString("TABLE_NAME").trim());
+            }
+        } catch (Exception ex) {
+            System.out.println("getTableNames: " + ex.getMessage());
+        }
+        return tableNames;
+    }
+
+    public void resetDB(String dbname) {
+        getTableNames(dbname);
+        setDBname(dbname);
+
+        for (String tb : tableNames) {
             dropString = "DROP TABLE " + tb;
             logDrop(dropString);
             connect();
