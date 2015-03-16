@@ -19,22 +19,28 @@
        
     </head>
     <body onload="init()" class="home">
-         <jsp:useBean id="query_proc" class="Controller.QueryProc" scope="session" ></jsp:useBean> 
-           
-        
+        <jsp:useBean id="query_proc" class="Controller.QueryProc" scope="session" ></jsp:useBean> 
+                   
         <div class="header">
-                <h3>Growing Database Schemas</h3>
-                <ul class="urlParent" >
-                    <li><a href="#"> About</a></li>
-                    <li><a href="./index.jsp">Start</a></li>
-                    <li><a href="./home.html">Home</a></li>
-                </ul>
+            
+            <h3>Growing Database Schemas</h3>
+            <ul class="urlParent" >
+                <li><a href="./home.html">Home</a></li>
+                <li><a href="./index.jsp">Start</a></li>
+                <li><a href="#"> About</a></li>
+            </ul>
+            
+            <div class="index_phase">
+                <img alt="step1-start" title="" src="resources/images/phase-end.png" width="300" height="40">                    
+            </div>
+            
         </div>
         
         <div id="sample">
-            <div id="myDiagram" style="background-color: white; width: 100%; height: 540px"></div>
+            <div id="myDiagram" style="background-color: white; width: 100%; height: 530px"></div>
             <!--<div id="myDiagram" style="background-color: white; border: solid 1px black; width: 100%; height: 700px"></div>-->
         </div>
+        
         <script id="code">
             function init() {
                 if (window.goSamples) goSamples(); // init for these samples -- you don't need to call this

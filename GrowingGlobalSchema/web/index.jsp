@@ -22,13 +22,25 @@
     <body class="home">
         <jsp:useBean id="query_proc" class="Controller.QueryProc" scope="session" ></jsp:useBean>  
 
+        
+        <c:if test="${param.submit == 'Undo Last Input'}" >
+            ${query_proc.undoLastInput(query_proc.DBname)}       
+        </c:if>
+        
+        
         <div class="header">
+            
             <h3>Growing Database Schemas</h3>
             <ul class="urlParent" >
-                <li><a href="#"> About</a></li>
-                <li><a href="./index.jsp">Start</a></li>
                 <li><a href="./home.html">Home</a></li>
+                <li><a href="./index.jsp">Start</a></li>
+                <li><a href="#"> About</a></li>
             </ul>
+            
+            <div class="index_phase">
+                <img alt="step1-start" title="" src="resources/images/phase-start.png" width="300" height="40">                    
+            </div>
+            
         </div>
 
         <script>
@@ -75,15 +87,26 @@
         </script>
 
         <div class="index_section">
-
-            <form method="POST" action="./upload"  enctype="multipart/form-data" id="formSer" >                
-                <h4>Chose a file:</h4><input type="file" name="file" id="file" /> <br>
-                <input type="submit" value="Upload" name="upload" id="upload" />
+            
+            <form method="POST" action="./upload"  enctype="multipart/form-data" id="formSer" >
+                
+                <div style="width:100%;">
+                    <font size="4">Chose a file:  </font>
+                    <img title="You can upload a file containing all of the SQL queries." src="resources/images/info.png">
+                </div>
+                
+                <input type="file" name="file" id="file" /> <br>
+                <input type="submit" value="Upload" name="upload" id="upload" />               
             </form>            
 
             <form action="./Relations.jsp" method="POST" id="textForm" onsubmit="return validateForm();">                
-            <!--<form action="./Controll" method="POST" id="poxfirm" onsubmit="return validateForm();">-->                
-                <h4>Enter or chose a database name:</h4><input type="text" name="DBname" id="DBname" /> 
+                
+                <div style="width:100%;">
+                    <br><font size="4">Enter or chose a database name:  </font>
+                    <img title="Create a new database by entering its name or choose an existing one from the list." src="resources/images/info.png">                    
+                </div>
+                
+                <input type="text" name="DBname" id="DBname" />
                 
                 <select id="slct">
                     <c:forEach items="${query_proc.getDBnames()}" var="dbn" >
@@ -91,12 +114,20 @@
                     </c:forEach>
                 </select>
 
-                <h4>Enter or edit queries:</h4><textarea rows="4" cols="52" id="inpt" name="query">${requestScope.test}</textarea>
-                <!--<input type="hidden" name="action" value="tabledisplay" />-->
-                <input type="hidden" id="action" name="dbAction" value="" />
-                <button name="actBTN" id="enlarge">Enlarge or Create schema</button>
-                <button name="actBTN" id="reset">Reset and Create schema</button>
+                <div style="width:100%;">
+                    <br><font size="4">Enter or edit queries:  </font>
+                    <img title="Enter queries that you want to create schema of or edit the ones you uploaded." src="resources/images/info.png">                    
+                </div>
                 
+                <textarea rows="4" cols="52" id="inpt" name="query">${requestScope.test}</textarea>
+                <input type="hidden" id="action" name="dbAction" value="" />
+                
+                <div style="width:100%;">
+                    <img title="Creates the schema of the entered query or enlarges the existing schema." src="resources/images/info.png"> 
+                    <button name="actBTN" id="enlarge">Create Schema</button>
+                    <button name="actBTN" id="reset">Reset Schema</button>
+                    <img title="Reset the current schema and create the schema of the currently entered query." src="resources/images/info.png"> 
+                </div>
             </form>
 
         </div>

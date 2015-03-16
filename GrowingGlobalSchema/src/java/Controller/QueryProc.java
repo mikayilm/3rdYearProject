@@ -25,13 +25,14 @@ public class QueryProc implements Serializable {
     private String[] column_names_proces;
     private String table_name_process;
     private String DBname;
-
-
-    private ArrayList<String> DBnames = new ArrayList<String>();
+    private ArrayList<String> DBnames = new ArrayList<>();
 
     SQL sql = new SQL();
 
     public void Input() {
+                
+        sql.createUndoString();
+        
         for (String line1 : lineSeparator(inputVal)) {
 
             SelectOptions(procesSelect(line1));
@@ -41,6 +42,19 @@ public class QueryProc implements Serializable {
         }
     }
 
+    
+    // SEPERATE LINES of query line by line
+    private List<String> lineSeparator(String input) {
+        
+        lines = new ArrayList<>();
+        Scanner scanner = new Scanner(input);
+        for (int i = 0; scanner.hasNextLine(); i++) {
+            lines.add(scanner.nextLine());
+        }
+        scanner.close();
+        return lines;
+    }
+    
     
     /*
          to chose which method to execute after,
@@ -113,18 +127,8 @@ public class QueryProc implements Serializable {
     
     public void extractTableName(List<String> Tname) {
         table_name_process = Tname.get(0);
-    }
+    }    
     
-    // SEPERATE LINES of query line by line
-    private List<String> lineSeparator(String input) {
-        lines = new ArrayList<String>();
-        Scanner scanner = new Scanner(input);
-        for (int i = 0; scanner.hasNextLine(); i++) {
-            lines.add(scanner.nextLine());
-        }
-        scanner.close();
-        return lines;
-    }
     
     // FILL in tableDisplay.jp
     public List<TableProperty> TBList(String Table_Name, String dbName) {
@@ -151,6 +155,67 @@ public class QueryProc implements Serializable {
         return TBList;        
     }
     
+    
+    public void resetDB(String dbname, String action) {
+        if (action.equals("reset")) {
+            sql.resetDB(dbname);
+        }
+    }
+    
+    
+    public void undoLastInput(String dbname){
+            sql.undo(dbname);
+    }
+    
+    
+    // MODIFIY TYPEs of columns in tabel - TableDisplay.jsp
+    public void alterDDL(String db_name, String tableName, Map<String, String> colType)
+    {       
+        for( Map.Entry<String, String> map : colType.entrySet() ){
+            sql.AlterTable(tableName, map.getKey(), map.getValue(), db_name);            
+        }        
+    } 
+    
+    
+    // FROM TO in TableMap.jsp
+    public Map<String, String> getRelation(Map<String, String> relation)
+    {
+        Iterator<Map.Entry<String, String>> it = relation.entrySet().iterator();
+
+        while (it.hasNext())
+        {
+          Map.Entry<String, String> entry = it.next();
+          if (entry.getKey().equals("save"))
+            it.remove();
+        }
+        
+        return relation;       
+    } 
+    
+    
+    
+    public void setDBname(String Dname) {
+        // used in SQL class
+        this.DBname = Dname;
+
+        if (!DBnames.contains(Dname)) {
+            DBnames.add(Dname);
+        }
+    }
+
+    
+    public String getDBname() {
+        return DBname;
+    }
+    
+    
+    public ArrayList<String> getDBnames() {
+        
+//        if (DBnames.isEmpty()) {
+//            DBnames.add("chose database name");        
+//        }                
+        return DBnames;
+    }
     
     public String getInputVal() {
         return inputVal;
@@ -182,36 +247,7 @@ public class QueryProc implements Serializable {
 
     public void setColumnName(String[] ColumnName) {
         this.column_names_proces = ColumnName;
-    }
-
-    public void setDBname(String Dname) {
-        // used in SQL class
-        this.DBname = Dname;
-
-        if (!DBnames.contains(Dname)) {
-            DBnames.add(Dname);
-        }
-    }
-
-    public ArrayList<String> getDBnames() {
-        
-//        if (DBnames.isEmpty()) {
-//            DBnames.add("chose database name");        
-//        }                
-        return DBnames;
-    }
-
-    public String getDBname() {
-        return DBname;
-    }
-    
-    
-    public void resetDB(String dbname, String action) {
-        if (action.equals("reset")) {
-//            SQL sql = new SQL();
-            sql.resetDB(dbname);
-        }
-    }
+    }  
 
     // to use in TableMap and DaatabaseDisplay.jsp
     public List<String> getTableNames(String dbname) {
@@ -219,7 +255,6 @@ public class QueryProc implements Serializable {
         return tableNames;
     }
     
-
     public String getTable_name_process() {
         return table_name_process;
     }
@@ -227,34 +262,8 @@ public class QueryProc implements Serializable {
     public void setTable_name_process(String table_name_process) {
         this.table_name_process = table_name_process;
     }
-    
-    public List getColumnNames(String DBName, String TableName){
-                
-        return null;
-    }   
-    
-    
-    // MODIFIY TYPEs of columns in tabel - TableDisplay.jsp
-    public void alterDDL(String db_name, String tableName, Map<String, String> colType)
-    {       
-        for( Map.Entry<String, String> map : colType.entrySet() ){
-            sql.AlterTable(tableName, map.getKey(), map.getValue(), db_name);            
-        }        
-    } 
-    
-    
-    // FROM TO in TableMap.jsp
-    public Map<String, String> getRelation(Map<String, String> relation)
-    {
-        Iterator<Map.Entry<String, String>> it = relation.entrySet().iterator();
-
-        while (it.hasNext())
-        {
-          Map.Entry<String, String> entry = it.next();
-          if (entry.getKey().equals("save"))
-            it.remove();
-        }
-        
-        return relation;       
-    } 
+//    
+//    public List getColumnNames(String DBName, String TableName){                
+//        return null;
+//    }       
 }

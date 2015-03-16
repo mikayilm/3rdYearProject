@@ -18,22 +18,39 @@
     <body class="home">
         <jsp:useBean id="query_proc" class="Controller.QueryProc" scope="session" ></jsp:useBean>  
 
-        <%--<jsp:useBean id="alter_table" class="Controller.AlterTable" scope="request" ></jsp:useBean>--%>        
-            ${query_proc.alterDDL(query_proc.DBname, query_proc.tableName.get(0), param )}
+        <!--To prevent functions from running when navigation does not come from Index class-->
+        <c:if test="${param.query ne null}" >
+            ${query_proc.resetDB(param.DBname, param.dbAction)}        
+            ${query_proc.setInputVal(param.query)}
+            ${query_proc.setDBname(param.DBname)}
+
+            ${query_proc.Input()}            
+        </c:if>
         
         <div class="header">
+            
             <h3>Growing Database Schemas</h3>
             <ul class="urlParent" >
-                <li><a href="#"> About</a></li>
-                <li><a href="./index.jsp">Start</a></li>
                 <li><a href="./home.html">Home</a></li>
+                <li><a href="./index.jsp">Start</a></li>
+                <li><a href="#"> About</a></li>
             </ul>
+            
+            <div class="index_phase">
+                <img alt="step1-start" title="" src="resources/images/phase-edit.png" width="300" height="40">                    
+            </div>
+            
         </div>
 
         <div class="table_section">
            <form action="./TableMap.jsp" method="POST">
-               <h4>Set a relation between tables</h4>
-               <table class="table table-striped" style="width:100%" >
+               
+                <div style="width:100%;">
+                    <img title="By chosing table name from the lists you will set relations between tables." src="resources/images/info.png">                    
+                    <font size="4">Set a relation between tables  </font><br>
+                </div>
+               
+               <table class="table table-striped" style="width:50%" >
                     <tr>
                         <th>FROM</th>
                         <th>TO</th>
@@ -53,9 +70,18 @@
                     </tr>
                     </c:forEach>
                 </table>    
-                <button name="save" id="save">Save and Continue</button>
-                <button name="edit" id="edit">Edit Columns</button>
-                <br>
+               
+               <div style="width:100%;">                    
+                   <img title="Save and continue to see the whole schema" src="resources/images/info.png">
+                    <input name ='submit' type='submit' value='Save and Continue' onclick='this.form.action="TableMap.jsp";' />
+                    <img title="Edit if you want to change the type of the column in any table of the schema." src="resources/images/info.png">
+                    <input name ='submit' type='submit' value='Edit Columns in Tables' onclick='this.form.action="DatabaseDisplay.jsp";' />
+                    <img title="to undo last entered input" src="resources/images/info.png">
+                    <input name ='submit' type='submit' value='Undo Last Input' onclick='this.form.action="index.jsp";' />
+                    <br><br>
+                </div>
+                
+                
             </form>
         </div>
         <div class="footer">
